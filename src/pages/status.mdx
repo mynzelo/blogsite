@@ -1,0 +1,33 @@
+---
+title: Status
+---
+
+import Progress from '../components/Progress.tsx'
+import tasks from '../data/computed/status.json'
+
+export default function StatusPage() {
+
+  const groups = [
+    { label: '🔄 进行中', status: 'in-progress' },
+    { label: '⏺ 未开始', status: 'pending' },
+    { label: '✅ 已完成', status: 'done' }
+  ];
+
+  return (
+    <>
+      <h1>📌 我的现在动态</h1>
+      {groups.map(({ label, status }) => {
+        const groupTasks = tasks.filter(t => t.status === status);
+        if (groupTasks.length === 0) return null;
+        return (
+          <section key={status}>
+            <h2>{label}</h2>
+            {groupTasks.map(item => (
+              <Progress key={item.title} {...item} />
+            ))}
+          </section>
+        );
+      })}
+    </>
+  );
+}

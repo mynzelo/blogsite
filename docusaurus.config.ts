@@ -1,6 +1,10 @@
-import {themes as prismThemes} from 'prism-react-renderer';
-import type {Config} from '@docusaurus/types';
+import { themes as prismThemes } from 'prism-react-renderer';
+import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
+import buildStatusJson from "./scripts/build-status-json";
+
+buildStatusJson(); // 启动或构建时自动运行
+
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -85,13 +89,17 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
-          label: 'Tutorial',
+          label: 'Docs',
         },
-        {to: baseUrl + '/blog', label: 'Blog', position: 'left'},
+        { to: baseUrl + '/blog', label: 'Blog', position: 'left' },
         {
           href: 'https://github.com/facebook/docusaurus',
           label: 'GitHub',
           position: 'right',
+        },
+        {
+          to: baseUrl + '/status',
+          label: 'Status',
         },
       ],
     },

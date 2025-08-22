@@ -1,0 +1,43 @@
+[
+    {
+        "title": "百年孤独",
+        "description": "加西亚·马尔克斯的代表作",
+        "percent": 50,
+        "status": "in-progress",
+        "tags": [
+            "阅读",
+            "长篇小说"
+        ],
+        "startDate": "2025-07-15",
+        "links": [
+            {
+                "name": "Wikipedia",
+                "url": "https://zh.wikipedia.org/wiki/%E7%99%BE%E5%B9%B4%E5%AD%A4%E7%8B%AC"
+            },
+            {
+                "name": "作者访谈",
+                "url": "https://example.com/interview"
+            }
+        ]
+    },
+    {
+        "title": "某书（完成）",
+        "description": "一本完成的书",
+        "percent": 100,
+        "status": "done",
+        "tags": [
+            "阅读"
+        ],
+        "startDate": "2025-06-01",
+        "endDate": "2025-07-01"
+    },
+    {
+        "title": "未来的计划",
+        "description": "还没开始",
+        "percent": 0,
+        "status": "pending",
+        "tags": [
+            "阅读"
+        ]
+    }
+]
