@@ -7,7 +7,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 const baseUrl = process.env.BASE_URL ?? '';
 
 const config: Config = {
-  title: 'My Site',
+  title: 'My BlogSite',
   tagline: 'Dinosaurs are cool',
   favicon: 'img/favicon.ico',
 
