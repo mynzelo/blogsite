@@ -15,7 +15,7 @@ export default function StatusPage() {
 
   return (
     <>
-      <h1>📌 我的现在动态</h1>
+      <h1>📌 时间都去哪儿了</h1>
       {groups.map(({ label, status }) => {
         const groupTasks = tasks.filter(t => t.status === status);
         if (groupTasks.length === 0) return null;
