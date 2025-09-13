@@ -11,8 +11,8 @@ buildStatusJson(); // 启动或构建时自动运行
 const baseUrl = process.env.BASE_URL ?? '';
 
 const config: Config = {
-  title: 'My BlogSite',
-  tagline: 'Dinosaurs are cool',
+  title: 'mynzelo的网站',
+  tagline: 'Blog is cool',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -75,7 +75,7 @@ const config: Config = {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
     navbar: {
-      title: 'My BlogSite',
+      title: 'mynzelo的网站',
       logo: {
         alt: 'My Site Logo',
         src: 'img/logo.svg',
