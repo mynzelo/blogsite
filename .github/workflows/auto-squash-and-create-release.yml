@@ -1,0 +1,79 @@
+name: Auto Squash Merge Previous Release & Create New Release
+
+on:
+  schedule:
+    # 每天北京时间凌晨 1 点执行（UTC 17:00 前一天）
+    - cron: '0 17 * * *'
+  workflow_dispatch:  # 支持手动运行
+
+jobs:
+  process-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 获取完整历史记录
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Calculate dates in Beijing time
+        id: date
+        run: |
+          YESTERDAY=$(TZ=Asia/Shanghai date -d "yesterday" +'%Y%m%d')
+          TODAY=$(TZ=Asia/Shanghai date +'%Y%m%d')
+          echo "yesterday_branch=release-$YESTERDAY" >> $GITHUB_OUTPUT
+          echo "today_branch=release-$TODAY" >> $GITHUB_OUTPUT
+
+      # 处理昨天的分支（合并到 main 并 squash）
+      - name: Check if yesterday's branch exists
+        id: check_yesterday
+        run: |
+          if git ls-remote --exit-code origin refs/heads/${{ steps.date.outputs.yesterday_branch }}; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Squash merge yesterday's branch into main
+        if: steps.check_yesterday.outputs.exists == 'true'
+        run: |
+          git fetch origin main
+          git fetch origin ${{ steps.date.outputs.yesterday_branch }}
+          git checkout main
+          git pull origin main
+          
+          git merge --squash origin/${{ steps.date.outputs.yesterday_branch }}
+          git commit -m "Merge ${{ steps.date.outputs.yesterday_branch }} into main (squashed)"
+          git push origin main
+
+      - name: Skip merge if yesterday's branch not found
+        if: steps.check_yesterday.outputs.exists == 'false'
+        run: echo "Yesterday's branch (${{ steps.date.outputs.yesterday_branch }}) does not exist. Skipping merge."
+
+      # 创建今天的分支
+      - name: Check if today's branch exists
+        id: check_today
+        run: |
+          if git ls-remote --exit-code origin refs/heads/${{ steps.date.outputs.today_branch }}; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create today's release branch from main
+        if: steps.check_today.outputs.exists == 'false'
+        run: |
+          git fetch origin main
+          git checkout main
+          git pull origin main
+          git checkout -b ${{ steps.date.outputs.today_branch }}
+          git push origin ${{ steps.date.outputs.today_branch }}
+
+      - name: Skip creating today's branch if exists
+        if: steps.check_today.outputs.exists == 'true'
+        run: echo "Today's branch (${{ steps.date.outputs.today_branch }}) already exists. Skipping creation."
