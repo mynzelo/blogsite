@@ -21,17 +21,6 @@
         ]
     },
     {
-        "title": "某书（完成）",
-        "description": "一本完成的书",
-        "percent": 100,
-        "status": "done",
-        "tags": [
-            "阅读"
-        ],
-        "startDate": "2025-06-01",
-        "endDate": "2025-07-01"
-    },
-    {
         "title": "未来的计划",
         "description": "还没开始",
         "percent": 0,
