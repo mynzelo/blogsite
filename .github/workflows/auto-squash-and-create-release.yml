@@ -29,7 +29,7 @@ jobs:
           echo "yesterday_branch=release-$YESTERDAY" >> $GITHUB_OUTPUT
           echo "today_branch=release-$TODAY" >> $GITHUB_OUTPUT
 
-      # 处理昨天的分支（合并到 main 并 squash）
+      # 检查昨天的分支是否存在
       - name: Check if yesterday's branch exists
         id: check_yesterday
         run: |
@@ -39,8 +39,22 @@ jobs:
             echo "exists=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Squash merge yesterday's branch into main
+      # 检查是否有更改
+      - name: Check if yesterday's branch has changes compared to main
+        id: check_changes
         if: steps.check_yesterday.outputs.exists == 'true'
+        run: |
+          git fetch origin main
+          git fetch origin ${{ steps.date.outputs.yesterday_branch }}
+          if git diff --quiet origin/main origin/${{ steps.date.outputs.yesterday_branch }}; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          fi
+
+      # squash merge 昨天的分支
+      - name: Squash merge yesterday's branch into main
+        if: steps.check_yesterday.outputs.exists == 'true' && steps.check_changes.outputs.has_changes == 'true'
         run: |
           git fetch origin main
           git fetch origin ${{ steps.date.outputs.yesterday_branch }}
@@ -50,6 +64,10 @@ jobs:
           git merge --squash origin/${{ steps.date.outputs.yesterday_branch }}
           git commit -m "Merge ${{ steps.date.outputs.yesterday_branch }} into main (squashed)"
           git push origin main
+
+      - name: Skip merge if yesterday's branch has no changes
+        if: steps.check_yesterday.outputs.exists == 'true' && steps.check_changes.outputs.has_changes == 'false'
+        run: echo "Yesterday's branch (${{ steps.date.outputs.yesterday_branch }}) has no changes compared to main. Skipping merge."
 
       - name: Skip merge if yesterday's branch not found
         if: steps.check_yesterday.outputs.exists == 'false'
