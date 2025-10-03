@@ -106,8 +106,8 @@ const config: Config = {
           title: 'Docs',
           items: [
             {
-              label: 'Tutorial',
-              to: '/docs/intro',
+              label: 'AI问答',
+              to: '/docs/AI%E9%97%AE%E7%AD%94/%E4%BC%91%E6%81%AF%E6%97%A5%E6%96%B0%E9%B2%9C%E4%BA%8B%E6%8E%A8%E8%8D%90',
             },
           ],
         },
